@@ -1,0 +1,9 @@
+
+services:
+  myservice:
+    build: .
+    ports:
+      - "50000:50000"
+      - "5005:5005"
+    environment:
+      - SERVER_PORT=50000
