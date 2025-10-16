@@ -19,17 +19,22 @@ public class BggService {
         this.userMapper = userMapper;
     }
 
-    public User getUser(String username) throws Exception {
+    public User getUser(String username) {
 
-        String xml = webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/xmlapi2/user")
-                        .queryParam("name", username)
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            String xml = webClient.get()
+                    .uri(uriBuilder -> uriBuilder.path("/xmlapi2/user")
+                            .queryParam("name", username)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
 
-        XmlUser xmlUser = xmlMapper.readValue(xml, XmlUser.class);
-        return userMapper.toUser(xmlUser);
+            XmlUser xmlUser = xmlMapper.readValue(xml, XmlUser.class);
+            return userMapper.toUser(xmlUser);
+        } catch (Exception e) {
+            // throw new Exception("Failed to fetch or parse user data", e);
+            return null;
+        }
     }
 }

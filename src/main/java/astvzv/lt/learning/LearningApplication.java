@@ -21,7 +21,11 @@ public class LearningApplication {
 	@RestController
 	class ApiController {
 
-		// private final BggService bggService;
+		private final BggService bggService;
+
+		public ApiController(BggService bggService) {
+			this.bggService = bggService;
+		}
 
 		@GetMapping("/api/echo")
 		public ResponseEntity<Map<String, String>> echo(@RequestParam String message) {
@@ -35,6 +39,17 @@ public class LearningApplication {
 		@GetMapping("/api/getGamesList/{userid}")
 		public String getGamesList(@PathVariable String userid) {
 			return "Games list for user: " + userid;
+		}
+
+		@GetMapping(value = "/user/{username}", produces = "application/json")
+		public ResponseEntity<User> getUser(@PathVariable String username) {
+			try {
+				User user = bggService.getUser(username);
+				return ResponseEntity.ok(user);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return ResponseEntity.internalServerError().build();
+			}
 		}
 
 	}
